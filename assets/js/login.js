@@ -1,6 +1,6 @@
 document.getElementById('loginForm').addEventListener('submit', function(event) {
+    event.preventDefault();
     let isValid = true;
-
     const username = document.getElementById('username');
     const password = document.getElementById('password');
 
@@ -18,7 +18,11 @@ document.getElementById('loginForm').addEventListener('submit', function(event) 
         document.getElementById('passwordError').classList.add('hidden');
     }
 
-    if (!isValid) {
-        event.preventDefault();
+    if (isValid) {
+        if (username.value === 'user' && password.value === 'password') {
+            window.location.href = 'index.html';
+        } else {
+            alert('Invalid username or password');
+        }
     }
 });

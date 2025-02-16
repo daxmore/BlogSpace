@@ -22,7 +22,7 @@ document.getElementById('signinForm').addEventListener('submit', function(event)
         document.getElementById('emailError').classList.add('hidden');
     }
 
-    // Password Validation
+    // Password Validation (must be at least 6 characters)
     if (password.value.length < 6) {
         document.getElementById('passwordError').classList.remove('hidden');
         isValid = false;
@@ -30,7 +30,7 @@ document.getElementById('signinForm').addEventListener('submit', function(event)
         document.getElementById('passwordError').classList.add('hidden');
     }
 
-    // Phone Validation (if entered, must be valid format)
+    // Phone Validation (if entered, must be 10 digits)
     if (phone.value && !/^[0-9]{10}$/.test(phone.value)) {
         document.getElementById('phoneError').classList.remove('hidden');
         isValid = false;
@@ -38,7 +38,15 @@ document.getElementById('signinForm').addEventListener('submit', function(event)
         document.getElementById('phoneError').classList.add('hidden');
     }
 
+    // Final validation and redirection
     if (!isValid) {
         event.preventDefault();
+    } else {
+        if (name.value.toLowerCase() === "user" && password.value === "password") {
+            window.location.href = "index.html";
+        } else {
+            alert("Invalid username or password.");
+            event.preventDefault();
+        }
     }
 });
