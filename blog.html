@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blogging Page</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        :root {
+            --primary-color: #31473a;
+            --background-color: #edf4f2;
+        }
+    </style>
+    <link rel="stylesheet" href="assets/css/output.css">
+</head>
+
+<body>
+    <!-- header part -->
+    <header class="bg-white shadow-sm">
+        <div class="container mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo Section -->
+                <div class="flex items-center">
+                    <a href="/" class="flex items-center">
+                        <span class="ml-3 text-xl font-bold text-gray-900">BlogSphere</span>
+                    </a>
+                </div>
+
+                <!-- Desktop Navigation -->
+                <nav class="hidden md:flex items-center space-x-8">
+                    <a href="index.html"
+                        class="text-gray-600 hover:text-[#31473a] transition-colors duration-200">Home</a>
+                    <a href="blog.html"
+                        class="text-gray-600 hover:text-[#31473a] transition-colors duration-200">Blogs</a>
+                    <a href="about.html"
+                        class="text-gray-600 hover:text-[#31473a] transition-colors duration-200">About</a>
+                </nav>
+
+                <!-- Desktop Button -->
+                <div class="hidden md:flex items-center space-x-4">
+                    <button onclick="toggleModal()"
+                        class="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-[#31473a] hover:bg-[#31473a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#31473a] transition-colors duration-200">
+                        Start Writing
+                    </button>
+
+                </div>
+
+                <!-- Mobile Hamburger Button -->
+                <button id="mobile-menu-button"
+                    class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-600 hover:text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-[#31473a] transition-colors duration-200">
+                    <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path class="mobile-menu-icon" stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M4 6h16M4 12h16M4 18h16" />
+                        <path class="mobile-menu-close hidden" stroke-linecap="round" stroke-linejoin="round"
+                            stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden md:hidden">
+                <div class="px-2 pt-2 pb-3 space-y-1 border-t border-gray-200">
+                    <a href="#"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Home</a>
+                    <a href="#"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Explore</a>
+                    <a href="#"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">Articles</a>
+                    <a href="#"
+                        class="block px-3 py-2 rounded-md text-base font-medium text-gray-700 hover:text-gray-900 hover:bg-gray-50 transition-colors duration-200">About</a>
+                    <button
+                        class="w-full mt-4 inline-flex items-center justify-center px-4 py-2 border border-transparent text-base font-medium rounded-md text-white bg-[#31473a] hover:bg-[#31473a] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#31473a] transition-colors duration-200">
+                        Start Writing
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main class="w-full min-h-screen px-4 md:px-12 lg:px-24 py-6 bg-gray-100 flex flex-col items-center">
+        <h2 class="text-4xl font-bold">Welcome to My Blog</h2>
+        <p class="text-lg mt-2">Sharing insights, stories, and updates.</p>
+
+        <!-- Modal -->
+        <div id="post-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+            <div class="bg-white p-6 rounded-lg shadow-md text-[var(--primary-color)] w-3/4 max-w-xl">
+                <h2 class="text-2xl font-bold mb-4">Create a New Post</h2>
+                <input type="text" id="title" placeholder="Title" class="w-full p-2 border rounded mb-2">
+                <input type="email" id="email" placeholder="Your Email" class="w-full p-2 border rounded mb-2">
+                <textarea id="content" placeholder="Write your content here..."
+                    class="w-full p-2 border rounded mb-2"></textarea>
+                <div class="flex justify-end">
+                    <button onclick="toggleModal()" class="mr-2 bg-gray-300 px-4 py-2 rounded">Cancel</button>
+                    <button onclick="addPost()"
+                        class="bg-[var(--primary-color)] text-white px-4 py-2 rounded">Publish</button>
+                </div>
+            </div>
+        </div>
+
+        <section class="w-full max-w-5xl mt-10">
+            <h2 class="text-2xl font-bold mb-4">Recent Posts</h2>
+            <div id="posts" class="space-y-4"></div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", loadPosts);
+
+        function toggleModal() {
+            document.getElementById('post-modal').classList.toggle('hidden');
+        }
+
+        function addPost() {
+            let title = document.getElementById('title').value.trim();
+            let email = document.getElementById('email').value.trim();
+            let content = document.getElementById('content').value.trim();
+            let timestamp = new Date().toLocaleString(); // Adds time and date
+
+            if (title && email && content) {
+                let post = { title, email, content, timestamp };
+                savePost(post);
+                displayPost(post);
+
+                // Clear input fields
+                document.getElementById('title').value = '';
+                document.getElementById('email').value = '';
+                document.getElementById('content').value = '';
+
+                toggleModal();
+            }
+        }
+
+        function savePost(post) {
+            let posts = JSON.parse(localStorage.getItem("blogPosts")) || [];
+            posts.unshift(post); // Add new post at the beginning
+            localStorage.setItem("blogPosts", JSON.stringify(posts));
+        }
+
+        function loadPosts() {
+            let posts = JSON.parse(localStorage.getItem("blogPosts")) || [];
+            posts.forEach(post => displayPost(post));
+        }
+
+        function displayPost(post) {
+            let postContainer = document.getElementById('posts');
+            let postDiv = document.createElement('div');
+
+            postDiv.classList.add(
+                'w-full', 'bg-white', 'p-6', 'rounded-xl', 'shadow-md', 'border', 'border-gray-300', 'transition-all',
+                'hover:shadow-lg', 'hover:border-[#31473a]'
+            );
+
+
+
+            postDiv.innerHTML = `
+        <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-green-400 to-blue-500 rounded-t-xl"></div>
+        <div class="flex justify-between items-center">
+            <h3 class="text-2xl font-semibold text-gray-800">${post.title}</h3>
+            <span class="text-sm text-gray-500">${post.timestamp}</span>
+        </div>
+        <p class="mt-2 text-gray-600 italic">By: 
+            <span class="font-semibold text-[#31473a]">${post.email}</span>
+        </p>
+        <p class="mt-3 text-gray-700 leading-relaxed">${post.content}</p>
+        <div class="mt-4 flex justify-end">
+            <button onclick="deletePost(this)" 
+                class="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-700 transition-all">
+                Delete
+            </button>
+        </div>
+    `;
+
+            postContainer.prepend(postDiv);
+        }
+
+        function deletePost(button) {
+            let postDiv = button.parentElement.parentElement;
+            postDiv.remove();
+
+            // Remove from localStorage
+            let posts = JSON.parse(localStorage.getItem("blogPosts")) || [];
+            let title = postDiv.querySelector('h3').innerText;
+            posts = posts.filter(post => post.title !== title);
+            localStorage.setItem("blogPosts", JSON.stringify(posts));
+        }
+
+
+    </script>
+</body>
+
+</html>
